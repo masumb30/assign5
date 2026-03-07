@@ -9,13 +9,52 @@
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://cdn.jsdelivr.net/combine/npm/daisyui@5/base/scrollbar.css,npm/daisyui@5/base/rootscrolllock.css,npm/daisyui@5/base/rootcolor.css,npm/daisyui@5/base/reset.css,npm/daisyui@5/base/properties.css,npm/daisyui@5/base/rootscrollgutter.css,npm/daisyui@5/base/svg.css,npm/daisyui@5/components/button.css,npm/daisyui@5/components/toggle.css,npm/daisyui@5/components/input.css,npm/daisyui@5/components/checkbox.css,npm/daisyui@5/components/select.css,npm/daisyui@5/components/menu.css,npm/daisyui@5/theme/light.css" rel="stylesheet" type="text/css" />
+    <link
+        href="https://cdn.jsdelivr.net/combine/npm/daisyui@5/base/scrollbar.css,npm/daisyui@5/base/rootscrolllock.css,npm/daisyui@5/base/rootcolor.css,npm/daisyui@5/base/reset.css,npm/daisyui@5/base/properties.css,npm/daisyui@5/base/rootscrollgutter.css,npm/daisyui@5/base/svg.css,npm/daisyui@5/components/button.css,npm/daisyui@5/components/toggle.css,npm/daisyui@5/components/input.css,npm/daisyui@5/components/checkbox.css,npm/daisyui@5/components/select.css,npm/daisyui@5/components/menu.css,npm/daisyui@5/theme/light.css"
+        rel="stylesheet" type="text/css" />
 
 </head>
 
 
-<body>
+<body class="bg-gray-50 min-h-[100vh]">
+
+    <header class="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center">
+                <img src="assets/github-logo.png" alt="">
+            </div>
+            <span class="text-xl font-bold tracking-tight text-gray-900">GitHub Issues Tracker</span>
+        </div>
+
+        <div class="flex items-center gap-3">
+            
+            <label class="input">
+                <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none"
+                        stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </g>
+                </svg>
+                <input type="search" class="input-ghost" placeholder="Search" />
+
+            </label>
+
+            <button
+                class="px-5  bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors whitespace-nowrap py-3 cursor-pointer">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+
+                New Issue
+            </button>
+        </div>
+    </header>
     
+<!-- tab section -->
+    <section></section>
+
+
+
+
 
     <script src="dashboard.js"></script>
 </body>
