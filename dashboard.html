@@ -17,7 +17,46 @@
 
 
 <body class="bg-gray-50 min-h-[100vh]">
-    
+    <!-- modal -->
+    <!-- <div class="absolute h-[100vh] w-full bg-gray-300/60 z-[1000]  top-0 left-0 flex items-center justify-center">
+        <div class="bg-white p-4 w-[80vw] rounded-md max-w-[500px]">
+            <p class="text-xl font-bold mb-2">Fix broken image uploads</p>
+            <div class="flex text-sm font-extralight items-center gap-2">
+                <button class="bg-green-400 px-2 py-1 rounded-full">Opened</button>
+                <div class="w-[4px] h-[4px] rounded-full bg-gray-500"></div>
+                <p>Opened by Fahim Ahmed</p>
+                <div class="w-[4px] h-[4px] rounded-full bg-gray-500"></div>
+                <p>22/02/2026</p>
+            </div>
+
+            <div class="flex">
+                <button >Bug</button>
+            </div>
+            <p class="font-extralight">The navigation menu doesn't collapse properly on mobile devices. Need to fix the responsive behavior.</p>
+
+            <div class="bg-gray-100 p-2 grid grid-cols-2">
+                <div>
+                    <p>Assigne:</p>
+                    <p>Fahim ahmed</p>
+                </div>
+                <div >
+                    <p>Priority</p>
+                    <button class="bg-red-100 text-red-600">HIGH</button>
+                </div>
+            </div>
+
+        </div>
+    </div>  -->
+
+    <!-- improved modal -->
+    <div id="issueModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative p-6">
+            <button onclick="closeModal()"
+                class="absolute top-4 right-4 text-gray-500 hover:text-black text-2xl">&times;</button>
+
+            <div id="modalContent" class="bg-white p-4 w-[80vw] rounded-md max-w-[500px]"></div>
+        </div>
+    </div>
 
     <header class="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200">
         <div class="flex items-center gap-2">
@@ -50,7 +89,7 @@
         </div>
     </header>
 
-    
+
 
     <section class="max-w-[1110px] m-auto mt-5">
 

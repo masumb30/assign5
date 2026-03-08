@@ -91,7 +91,7 @@ const createCard = (issue, type) => {
 
 };
 
-const displayData = ( type, url='') => {
+const displayData = (type, url = '') => {
     // clear container
     cardcontainer.innerHTML = '';
 
@@ -104,7 +104,7 @@ const displayData = ( type, url='') => {
     </svg>
 </div>`
 
-const fetchurl = url === '' ? `https://phi-lab-server.vercel.app/api/v1/lab/issues` : `https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${url}`;
+    const fetchurl = url === '' ? `https://phi-lab-server.vercel.app/api/v1/lab/issues` : `https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${url}`;
     // load data
     fetch(fetchurl)
         .then(result => result.json())
@@ -148,25 +148,120 @@ const fetchurl = url === '' ? `https://phi-lab-server.vercel.app/api/v1/lab/issu
 
 }
 
-searchinput.addEventListener('keydown', function(event) {
+searchinput.addEventListener('keydown', function (event) {
     // Check if the pressed key is "Enter"
     if (event.key === 'Enter') {
-        
+
         event.preventDefault();
-        
+
         displayData('all', event.target.value);
     }
 });
 
-const handleModal = (issueId)=> {
-    console.log(issueId)
-    // set a loading modal screen
+// const handleModal = (issueId)=> {
+//     console.log(issueId)
+//     // set a loading modal screen
+//     const modal = 
+//     document.body.appendChild();
 
-    // fetch data
+//     // fetch data
 
-    // remove loading
+//     // remove loading
 
-    // display modal with data
-}
+//     // display modal with data
+// }
 
 displayData('all');
+
+
+// modal functionality
+async function handleModal(id) {
+    const modal = document.getElementById('issueModal');
+    const content = document.getElementById('modalContent');
+
+    // 1. Show the modal and a loading state
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    content.innerHTML = `
+        <div class="flex flex-col items-center justify-center py-10">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-green-800"></div>
+            <p class="mt-4 text-gray-600">Fetching issue details...</p>
+        </div>
+    `;
+
+    try {
+        // 2. Fetch the data
+        const response = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`);
+        if (!response.ok) throw new Error('Failed to fetch data');
+        const data = await response.json();
+        const issue = data.data;
+        const statusStyle = {
+            open: 'bg-green-700',
+            closed: 'bg-purple-700'
+        }
+        const priorityStyles = {
+            high: "bg-red-700",
+            medium: "bg-yellow-500 ",
+            low: "bg-blue-700"
+        };
+        const labelStyles = {
+            bug: "bg-red-100 text-red-600",
+            enhancement: "bg-purple-100 text-purple-600",
+            "help wanted": "bg-yellow-100 text-yellow-600"
+        };
+
+        const assignee = issue.assignee === '' ? 'Not Assigned' : issue.assignee;
+
+        // 3. Remove loading and fill with data
+        content.innerHTML = `<p class="text-xl font-bold mb-2">${issue.title}</p>
+            <div class="flex text-sm font-extralight items-center gap-2">
+                <button class="${statusStyle[issue.status]} px-2 py-1 rounded-full text-white">${issue.status}</button>
+                <div class="w-[4px] h-[4px] rounded-full bg-gray-500"></div>
+                <p>Opened by Fahim Ahmed</p>
+                <div class="w-[4px] h-[4px] rounded-full bg-gray-500"></div>
+                <p>22/02/2026</p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 my-2">
+                    ${issue.labels.map(label => `
+                        <div class="text-[12px] flex items-center rounded-full px-2 ${labelStyles[label.toLowerCase()] || 'bg-gray-100 text-gray-600'}">
+                            <i class="fa fa-tag mr-1" aria-hidden="true"></i>
+                            ${label}
+                        </div>
+                    `).join('')}
+                </div>
+            <p class="font-extralight">The navigation menu doesn't collapse properly on mobile devices. Need to fix the responsive behavior.</p>
+
+            <div class="bg-gray-100 p-2 grid grid-cols-2">
+                <div>
+                    <p>Assigne:</p>
+                    <p class="font-bold">${assignee}</p>
+                </div>
+                <div >
+                    <p>Priority</p>
+                    <button class="${priorityStyles[issue.priority]} px-4 py-1 rounded-full text-white">${issue.priority}</button>
+                </div>
+            </div>`;
+    } catch (error) {
+        // Handle Errors
+        content.innerHTML = `
+            <div class="text-center py-10">
+                <p class="text-red-500 font-bold">Error: ${error.message}</p>
+                <button onclick="closeModal()" class="mt-4 underline">Close</button>
+            </div>
+        `;
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('issueModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+window.onclick = function (event) {
+    const modal = document.getElementById('issueModal');
+    if (event.target == modal) {
+        closeModal();
+    }
+}
