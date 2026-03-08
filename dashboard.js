@@ -154,7 +154,21 @@ searchinput.addEventListener('keydown', function (event) {
 
         event.preventDefault();
 
+        
+
         displayData('all', event.target.value);
+        filterButtons.forEach(button => {
+            console.log("consoling; ", button.id)
+            if(button.id === 'all'){
+                button.classList.remove('bg-white', 'text-gray-700');
+                button.classList.add('bg-blue-600', 'text-white');
+            }else{
+                
+                button.classList.remove('bg-blue-600', 'text-white');
+                    button.classList.add('bg-white', 'text-gray-700');
+            }
+            
+        });
     }
 });
 
