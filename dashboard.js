@@ -1,9 +1,13 @@
 
 const filterButtons = document.querySelectorAll('.filter-btn');
 const cardcontainer = document.getElementById('issue-container')
+const allbutton = document.getElementById('all');
+const openbutton = document.getElementById('open');
+const closebutton = document.getElementById('close');
+const searchinput = document.getElementById('searchinput');
 
 filterButtons.forEach(button => {
-    button.addEventListener('click', function() {
+    button.addEventListener('click', function () {
         // 1. Remove active classes from all buttons
         filterButtons.forEach(btn => {
             btn.classList.remove('bg-blue-600', 'text-white');
@@ -13,16 +17,17 @@ filterButtons.forEach(button => {
         // 2. Add active classes to the clicked button
         this.classList.remove('bg-white', 'text-gray-700');
         this.classList.add('bg-blue-600', 'text-white');
+        displayData(this.id);
     });
 });
 
 
 
-const createCard = (issue) => {
+const createCard = (issue, type) => {
     // 1. Mapping for Status Images
     const statusIcons = {
         "open": "/assets/Open-Status.png",
-        "closed": "/assets/Closed-Status .png" ,// Assuming this exists
+        "closed": "/assets/Closed-Status .png",// Assuming this exists
     };
 
     // 2. Mapping for Priority Colors
@@ -45,9 +50,9 @@ const createCard = (issue) => {
 
     // 4. Formatting Date
     const formattedDate = new Date(issue.createdAt).toLocaleDateString();
-
-    return `
-        <div class="card flex flex-col bg-white rounded-t-md ${borderStyles[issue.status]}">
+    if (type === 'all' || type === issue.status) {
+        return `
+        <div onclick={handleModal(${issue.id})} class="card flex cursor-pointer hover:shadow-md flex-col bg-white rounded-t-md ${borderStyles[issue.status]}">
             <div class="p-2 border-b-2 border-b-gray-300 flex-grow">
                 <div class="flex justify-between mt-2">
                     <img src="${statusIcons[issue.status]}" alt="${issue.status}" />
@@ -77,31 +82,65 @@ const createCard = (issue) => {
                 <p class="text-sm font-extralight text-gray-500">${formattedDate}</p>
             </div>
         </div>
-    `;
+    `
+    } else {
+        return ``;
+    }
+
+
+
 };
 
-const displayData = ()=> {
+const displayData = ( type, url='') => {
     // clear container
     cardcontainer.innerHTML = '';
 
     // set a spinner on container
-    cardcontainer.innerHTML = `<div class="w-full h-[200px] flex items-center justify-center"> 
-                Loading...
-            </div>`
+    cardcontainer.innerHTML = `<div class="w-full h-[200px] flex items-center justify-center text-green-800">
+    
+    <span>Loading data...  </span><svg class="mr-3 size-5 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+</div>`
 
+const fetchurl = url === '' ? `https://phi-lab-server.vercel.app/api/v1/lab/issues` : `https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${url}`;
     // load data
-    fetch('https://phi-lab-server.vercel.app/api/v1/lab/issues')
-.then(result=> result.json())
-.then(data=> {
-    const issues = data.data;
-    let content = '';
-    issues.map(issue=> {
-        const card = createCard(issue);
-        content+= card;
-    })
-    cardcontainer.innerHTML = ``;
-    cardcontainer.innerHTML = content;
-})
+    fetch(fetchurl)
+        .then(result => result.json())
+        .then(data => {
+            const issues = data.data;
+            const count = issues.filter(issue => {
+                if (type === 'all') {
+                    return issue;
+                } else {
+                    return issue.status === type;
+                }
+            }).length;
+            let content = `<div class="bg-white p-4 flex justify-between mt-4 shadow-sm rounded-md mb-4">
+            <div class="flex items-center gap-2">
+                <img class="bg-purple-100 p-3 rounded-full" src="assets/Aperture.png" alt="">
+                <div>
+                    <p class="font-bold text-lg">${count} Issues</p>
+                    <p>Track and manage your project issues</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-[10px] h-[10px] rounded-full bg-green-500"></div>
+                <p>Open</p>
+                <div class="w-[10px] h-[10px] rounded-full bg-purple-500"></div>
+                <p>Closed</p>
+            </div>
+        </div> <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 bg-gray-100 rounded-md p-4">`;
+            issues.map(issue => {
+                const card = createCard(issue, type);
+                content += card;
+            })
+            content += `</div>`
+            cardcontainer.innerHTML = ``;
+
+            cardcontainer.innerHTML = content;
+        })
 
     // remove spinner
 
@@ -109,5 +148,25 @@ const displayData = ()=> {
 
 }
 
+searchinput.addEventListener('keydown', function(event) {
+    // Check if the pressed key is "Enter"
+    if (event.key === 'Enter') {
+        
+        event.preventDefault();
+        
+        displayData('all', event.target.value);
+    }
+});
 
-displayData();
+const handleModal = (issueId)=> {
+    console.log(issueId)
+    // set a loading modal screen
+
+    // fetch data
+
+    // remove loading
+
+    // display modal with data
+}
+
+displayData('all');
